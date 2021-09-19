@@ -1,10 +1,12 @@
 using Dates
 using Lazy
+using PartialFunctions
 
 """
 - Julia Types | <https://docs.julialang.org/en/v1/manual/types/>
 - Lazy Macro | <https://github.com/MikeInnes/Lazy.jl#macros>
 - latex_symbols.jl | <https://github.com/JuliaLang/julia/blob/37e239ce7fb04c16598e969350c53ab75a93afaf/stdlib/REPL/src/latex_symbols.jl#L528
+- PartialFunctions | <https://juliahub.com/ui/Packages/PartialFunctions/dX5Z0/1.0.4>
 """
 
 hello(who::String) = "Hello, $who"
@@ -69,6 +71,8 @@ pp(f::Int64, s::Int64) = [f, s] |> sum |> sqrt
 
 pp2() = 1:10 |> sum |> sqrt
 
+curry(f, a...) = (b...) -> f(a..., b...) # same as `Base.Fix1`
+
 inp = [1.0:5.0;]
 
 add_one() = 1:10 .|> (x -> x + 1)
@@ -76,7 +80,7 @@ add_one2() = 10 .* 1 .+ inp                 # 初めに * 10 を適用
 add_one2_2() = @. 10 * 1 + inp              # 初めに * 10 を適用
 add_one3() = inp .|> (sqrt ∘ (x -> x * 2))  # 初めに * 2 を適用
 add_one4() = inp .|> sqrt .|> (x -> x * 2)  # 初めに sqrt を適用
-add_one5() = @. inp |> sqrt |> (x -> x * 2) # 初めに sqrt を適用
+add_one5() = @. inp |> sqrt |> (*)$2        # 初めに sqrt を適用
 
 # broadcasing := それぞれの element に対し、index の対応する関数をそれぞれ適用
 ziplike() = ["a", "list", "of", "strings"] .|> [uppercase, reverse, titlecase, length]

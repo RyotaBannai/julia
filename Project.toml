@@ -2,4 +2,5 @@
 Example = "7876af07-990d-54b4-ab0e-23690620f79a"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 Lazy = "50d2b5c4-7a5e-59d5-8109-a42b560f39c0"
+PartialFunctions = "570af359-4316-4cb7-8c74-252c00c2016b"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
