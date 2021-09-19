@@ -22,6 +22,17 @@
   - `A[i] = x`	`setindex!`
   - `A.n`	`getproperty`
   - `A.n = x`	`setproperty!`
+
+- [`Scope constructs`](https://docs.julialang.org/en/v1/manual/variables-and-scoping/#man-scope-table): The constructs introducing scope blocks are:
+  - `Construct`	`Scope type`	`Allowed within`
+  - `module, baremodule`	`global`	`global`
+  - `struct`	`local (soft)`	`global`
+  - `for, while, try`	`local (soft)`	`global, local`
+  - `macro`	`local (hard)`	`global`
+  - `functions, do blocks, let blocks, comprehensions, generators`	`local (hard)`	`global, local`
+
+  - those which only introduce a "`soft scope`", which affects whether `shadowing` a `global variable by the same name` is allowed or not.
+  - `begin` block doesn't introduct new scope
 - Functions:
   - When `a bare identifier` or `dot expression` occurs after a semicolon, `the keyword argument name is implied by the identifier or field name`. For example,
    - `plot(x, y; width)` is equivalent to` plot(x, y; width=width)` and,
@@ -29,3 +40,5 @@
   - rightmost occurance is applied:
    - In the call `plot(x, y; options..., width=2)` it is possible that the options structure also contains a value for width. In such a case the rightmost occurrence takes precedence. When `plot(x, y; width=3, width=2)`, `width=2` is applied
 - [Supporting multi-dispatch](https://docs.julialang.org/en/v1/manual/methods/#Methods)
+- Type: 
+  - `Any` is commonly called "`top`" because it is at the apex of the type graph. Julia also has a predefined abstract "`bottom`" type, at the nadir of the type graph, which is written as `Union{}`. It is the exact opposite of `Any`: no object is an instance of `Union{}` and all types are supertypes of `Union{}`.

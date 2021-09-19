@@ -49,6 +49,18 @@ cat(x::Int64) =
         x
     end
 
+cat2(x::Int64) = begin
+    x < 0 && iseven(x) && return 0
+    x == 0 && return 1
+    return x
+end
+
+fact(n::Int) = begin
+    n >= 0 || error("n must be non-negative")
+    n == 0 && return 1
+    n * fact(n - 1)
+end
+
 # function composition
 fc(f::Int64, s::Int64) = (sqrt ∘ +)(f, s)
 
@@ -57,12 +69,14 @@ pp(f::Int64, s::Int64) = [f, s] |> sum |> sqrt
 
 pp2() = 1:10 |> sum |> sqrt
 
+inp = [1.0:5.0;]
+
 add_one() = 1:10 .|> (x -> x + 1)
-add_one2() = 10 .* 1 .+ [1.0:5.0;]                 # 初めに * 10 を適用
-add_one2_2() = @. 10 * 1 + [1.0:5.0;]              # 初めに * 10 を適用
-add_one3() = [1.0:5.0;] .|> (sqrt ∘ (x -> x * 2))  # 初めに * 2 を適用
-add_one4() = [1.0:5.0;] .|> sqrt .|> (x -> x * 2)  # 初めに sqrt を適用
-add_one5() = @. [1.0:5.0;] |> sqrt |> (x -> x * 2) # 初めに sqrt を適用
+add_one2() = 10 .* 1 .+ inp                 # 初めに * 10 を適用
+add_one2_2() = @. 10 * 1 + inp              # 初めに * 10 を適用
+add_one3() = inp .|> (sqrt ∘ (x -> x * 2))  # 初めに * 2 を適用
+add_one4() = inp .|> sqrt .|> (x -> x * 2)  # 初めに sqrt を適用
+add_one5() = @. inp |> sqrt |> (x -> x * 2) # 初めに sqrt を適用
 
 # broadcasing := それぞれの element に対し、index の対応する関数をそれぞれ適用
 ziplike() = ["a", "list", "of", "strings"] .|> [uppercase, reverse, titlecase, length]
@@ -95,3 +109,12 @@ X = similar(Y) # pre-allocate output array
 this_is_matrix = 1 .+ [2, 3]
 # 2x2 matrix
 this_is_matrix2 = [1 2] .+ [3, 4]
+
+# you can `reuse` variable from `outer scope` in loop
+function f_using_outer_val()
+    i = 0
+    for outer i = 1:3
+        # empty
+    end
+    return i
+end
