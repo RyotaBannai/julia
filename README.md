@@ -42,3 +42,6 @@
 - [Supporting multi-dispatch](https://docs.julialang.org/en/v1/manual/methods/#Methods)
 - Type: 
   - `Any` is commonly called "`top`" because it is at the apex of the type graph. Julia also has a predefined abstract "`bottom`" type, at the nadir of the type graph, which is written as `Union{}`. It is the exact opposite of `Any`: no object is an instance of `Union{}` and all types are supertypes of `Union{}`.
+
+- The type `Vararg{T,N}` corresponds to exactly `N` elements of type `T`. `NTuple{N,T}` is a convenient alias for `Tuple{Vararg{T,N}}`, i.e. a tuple type containing exactly `N` elements of type `T`.
+- The syntax `Array{<:Integer}` is a convenient shorthand for `Array{T} where T<:Integer`
