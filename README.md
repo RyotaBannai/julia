@@ -45,3 +45,6 @@
 
 - The type `Vararg{T,N}` corresponds to exactly `N` elements of type `T`. `NTuple{N,T}` is a convenient alias for `Tuple{Vararg{T,N}}`, i.e. a tuple type containing exactly `N` elements of type `T`.
 - The syntax `Array{<:Integer}` is a convenient shorthand for `Array{T} where T<:Integer`
+- Method:
+  - A definition of one possible behavior for a `function` is called a `method`.
+  - The `choice of which method to execute` when a function is applied is called `dispatch`.

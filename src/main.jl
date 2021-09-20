@@ -2,12 +2,14 @@ using Dates
 using Lazy
 using PartialFunctions
 
-"""
+#= 
 - Julia Types | <https://docs.julialang.org/en/v1/manual/types/>
+- What is difference between Type{T} and T | <https://discourse.julialang.org/t/what-is-difference-between-type-t-and-t/19325/57>
+- UnionAll | <https://docs.julialang.org/en/v1/devdocs/types/#UnionAll-types>
 - Lazy Macro | <https://github.com/MikeInnes/Lazy.jl#macros>
 - latex_symbols.jl | <https://github.com/JuliaLang/julia/blob/37e239ce7fb04c16598e969350c53ab75a93afaf/stdlib/REPL/src/latex_symbols.jl#L528>
 - PartialFunctions | <https://juliahub.com/ui/Packages/PartialFunctions/dX5Z0/1.0.4>
-"""
+=#
 
 hello(who::String) = "Hello, $who"
 
@@ -91,7 +93,7 @@ B = [4.0, 5.0, 6.0];
 f.(pi, A) # like `zipLongest`
 f.(A, B)  # like simple `zip`
 
-"""
+#=
 These are the same: 
 
 1. sin.(cos.(X)) 
@@ -100,7 +102,7 @@ These are the same:
 
 Technically, the `fusion` stops as soon as a "non-dot" function call is encountered; 
 for example, in `sin.(sort(cos.(X)))` the `sin` and `cos` loops cannot be merged because of the intervening `sort` function.
-"""
+=#
 
 # Pre allocation for Vector and apply function to each element
 Y = [1.0:5.0;]
@@ -162,14 +164,14 @@ function norm2(p::Point{T} where {T<:Real})::T
     sqrt(p.x^2 + p.y^2)
 end
 
-"""
+#=
 actual definition of Julia's Rational immutable type:
 
 struct Rational{T<:Integer} <: Real
   num::T
   den::T
 end
-"""
+=#
 
 const T1 = Array{Array{T,1} where T,1}
 # Vector{Vector{T} where T} (alias for Array{Array{T, 1} where T, 1})
@@ -177,7 +179,7 @@ const T1 = Array{Array{T,1} where T,1}
 const T2 = Array{Array{T,1},1} where {T}
 # Array{Vector{T}, 1} where T
 
-""" |
+#= |
 <https://docs.julialang.org/en/v1/manual/types/#UnionAll-Types>
 
 Type `T1` defines a 1-dimensional array of 1-dimensional arrays; each of the inner arrays consists of objects of the same type, but this type may vary from one inner array to the next. 
@@ -185,13 +187,13 @@ Type `T1` defines a 1-dimensional array of 1-dimensional arrays; each of the inn
 On the other hand, type `T2` defines a 1-dimensional array of 1-dimensional arrays all of whose inner arrays must have the same type. 
 
 Note that `T2` is an abstract type, e.g., `Array{Array{Int,1},1} <: T2`, whereas `T1` is a concrete type. As a consequence, `T1` can be constructed with a zero-argument constructor `a=T1()` but `T2` cannot.
-"""
+=#
 
 struct WrapType{T}
     value::T
 end
 
-"""
+#=
 WrapType(Float64) # default constructor, note DataType 
 WrapType{DataType}(Float64)
 """
@@ -200,7 +202,7 @@ WrapType(::Type{T}) where {T} = WrapType{Type{T}}(T)
 """
 WrapType(Float64) # sharpened constructor, note more precise Type{Float64}
 WrapType{Type{Float64}}(Float64)
-"""
+=#
 
 struct Polar{T<:Real} <: Number
     r::T
@@ -221,11 +223,12 @@ function Base.show_unquoted(io::IO, z::Polar, ::Int, predecence::Int)
         print(io, ")")
     end : show(io, z)
 end
-"""
+
+#=
 a = Polar(3,4.0)
 :($a^2)
 # shows `:((3.0 * exp(4.0im)) ^ 2)` instead of `3.0 * exp(4.0im) ^ 2`
-"""
+=#
 
 # passing context 
 function Base.show(io::IO, z::Polar)
@@ -233,7 +236,33 @@ function Base.show(io::IO, z::Polar)
     print(io, z.r, " * exp(", z.Θ, "im)")
 end
 
-"""
+#=
 show(IOContext(stdout,:compact=>true),a) # 3.0e4.0im
 show(a)                                  # 3.0 * exp(4.0im)
-"""
+=#
+
+# * Methods
+m(x::Float64, y::Float64) = 2x + y
+m(x::Integer, y::Integer) = 2x - y
+
+same_type(x::T, y::T) where {T} = true
+same_type(x, y) = false
+
+testm(x::Int) = "definition for Int"
+testm(x::Type{Int}) = "definition for Type{Int}"
+
+# DataType <: Type{T} <: Any 
+# typeof(AbstractArray) = AbstractArray, supertype(AbstractArray) = UnionAll <: Type{T}
+# Array <: DenseArray <: AbstractArray -- all type are UnionAll
+
+# dump(Array) to show details types
+
+# Extract the type parameter from a super-type: use `Base.eltype` insetad tho
+# eltype(Array{UInt, 2}) = UInt64
+# eltype(::Type{<:AbstractArray{T}}) where {T} = T
+
+# copy_with_eltype(input, Float64) # changes the type of element `UInt` to `Float64`
+input = Array{UInt}(undef, 2)
+copy_with_eltype(input, Eltype) = copyto!(similar(input, Eltype), input)
+
+# `f(x::Int...) = x` is a shorthand for `f(x::Vararg{Int}) = x`
