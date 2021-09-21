@@ -27,3 +27,16 @@ function ⊘(x::Complex, y::Complex)
     yy = real(y * y')
     complex(real(xy) ⊘ yy, imag(xy) ⊘ yy)
 end
+
+# promote_rule(::Type{Float64}, ::Type{Float32}) = Float64
+
+promote_rule(::Type{Rational{T}}, ::Type{S}) where {T<:Integer,S<:Integer} =
+    Rational{promote_type(T, S)}
+promote_rule(
+    ::Type{Rational{T}},
+    ::Type{Rational{S}},
+) where {T<:Integer,S<:Integer} = Rational{promote_type(T, S)}
+promote_rule(
+    ::Type{Rational{T}},
+    ::Type{S},
+) where {T<:Integer,S<:AbstractFloat} = promote_type(T, S)

@@ -7,17 +7,15 @@
   - Expressions starting with a numeric literal followed by `e` or `E` are always `floating-point literals`.
   - Expressions starting with a numeric literal followed by `f` are always `32-bit floating-point literals`.
 - `Vectorized "dot" operators`:
-  - `dot calls`: `2 .* A.^2 .+ sin.(A)` (or equivalently `@. 2A^2 + sin(A)`, using the `@. macro`) 
+  - `dot calls`: `2 .* A.^2 .+ sin.(A)` (or equivalently `@. 2A^2 + sin(A)`, using the `@. macro`)
   - `nested dot calls` like `f.(g.(x))` are fused, and "adjacent" binary operators like `x .+ 3 .* x.^2` are equivalent to nested dot calls `(+).(x, (*).(3, (^).(x, 2)))`.
 
-- `A = [1,2,3]; 0 .< A .< 1;` returns `[0,0,0]`, which is a kind of masks for each element in array A 
-  - `v(x) = (println(x); x); v(1) < v(2) <= v(3)`
-- [`Operators With Special Names`](https://docs.julialang.org/en/v1/manual/functions/#Operators-With-Special-Names): A few special expressions correspond to calls to functions with 
+- `A = [1,2,3]; 0 .< A .< 1;` returns `[0,0,0]`, which is a kind of masks for each element in array A
+  - `v(x) = (println(x); x); v(1) < v(2) <= v(3)` - [`Operators With Special Names`](https://docs.julialang.org/en/v1/manual/functions/#Operators-With-Special-Names): A few special expressions correspond to calls to functions with
   - Expression	Calls
   - `[A B C ...]`	`hcat` - create matix
   - `[A; B; C; ...]`	`vcat` - create matix
-  - `[A B; C D; ...]`	`hvcat` - create matix
-  - `A'`	`adjoint`
+  - `[A B; C D; ...]`	`hvcat` - create matix - `A'`	`adjoint`
   - `A[i]`	`getindex`
   - `A[i] = x`	`setindex!`
   - `A.n`	`getproperty`
@@ -40,7 +38,7 @@
   - rightmost occurance is applied:
    - In the call `plot(x, y; options..., width=2)` it is possible that the options structure also contains a value for width. In such a case the rightmost occurrence takes precedence. When `plot(x, y; width=3, width=2)`, `width=2` is applied
 - [Supporting multi-dispatch](https://docs.julialang.org/en/v1/manual/methods/#Methods)
-- Type: 
+- Type:
   - `Any` is commonly called "`top`" because it is at the apex of the type graph. Julia also has a predefined abstract "`bottom`" type, at the nadir of the type graph, which is written as `Union{}`. It is the exact opposite of `Any`: no object is an instance of `Union{}` and all types are supertypes of `Union{}`.
 
 - The type `Vararg{T,N}` corresponds to exactly `N` elements of type `T`. `NTuple{N,T}` is a convenient alias for `Tuple{Vararg{T,N}}`, i.e. a tuple type containing exactly `N` elements of type `T`.
@@ -48,3 +46,10 @@
 - Method:
   - A definition of one possible behavior for a `function` is called a `method`.
   - The `choice of which method to execute` when a function is applied is called `dispatch`.
+- [`When is convert called?`](https://docs.julialang.org/en/v1/manual/conversion-and-promotion/#When-is-convert-called?): The following language constructs call `convert`:
+  - Assigning to an array converts to the array's element type.
+  - Assigning to a field of an object converts to the declared type of the field.
+  - Constructing an object with `new` converts to the object's declared field types.
+  - Assigning to a variable with a declared type (e.g. `local x::T`) converts to that type.
+  - A function with a declared return type converts its return value to that type.
+  - Passing a value to `ccall` converts it to the corresponding argument type.

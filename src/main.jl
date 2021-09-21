@@ -230,6 +230,11 @@ Base.show(io::IO, ::MIME"text/plain", z::Polar{T}) where {T} =
 
 # display(z) -> show(stdout,MIME("text/plain"),z) -> show(stdout,z)
 
+#=
+`::` symbol, which only the type is given, means that for a function argument whose type is specified but whose value does not need to be referenced
+
+<https://docs.julialang.org/en/v1/manual/conversion-and-promotion/#Defining-New-Conversions>
+=#
 function Base.show_unquoted(io::IO, z::Polar, ::Int, predecence::Int)
     Base.operator_precedence(:*) <= predecence ? begin
         print(io, "(")
