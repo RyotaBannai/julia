@@ -154,6 +154,17 @@ struct Point{T} <: Pointy{T}
     y::T
 end
 
+#=
+type T should be the same type, if you want to use different type for each at constructor,
+then, you should define outer constructor method as you desire.
+
+Point(x::Int64, y::Float64) = Point(convert(Float64, x), y)
+norm2(Point(1,2.))
+=#
+# Without  <:Real constraint, `promote` will try to convert endlessly, causing stackoverflow.
+Point(x::T, y::T) where {T<:Real} = Point{T}(x, y);
+Point(x::Real, y::Real) = Point(promote(x, y)...)
+
 struct DiagPoint{T} <: Pointy{T}
     x::T
 end
@@ -162,7 +173,8 @@ function norm(p::Point{<:Real}) # you can't put just `Read` because it doesn't a
     sqrt(p.x^2 + p.y^2)
 end
 
-function norm2(p::Point{T} where {T<:Real})::T
+# inputs must be Float64 because the return value is Float64(bc `sqrt`)
+function norm2(p::Point{T})::T where {T<:Real}
     sqrt(p.x^2 + p.y^2)
 end
 
@@ -289,4 +301,30 @@ struct OrderedPair
     fst::Real
     snd::Real
     OrderedPair(fst, snd) = fst > snd ? error("out of order") : new(fst, snd)
+end
+
+# Incomplete Initialization
+mutable struct SelfReferential
+    self::SelfReferential
+    SelfReferential() = (x = new(); x.self = x)
+end
+
+mutable struct MyLazyBoy
+    data::Any
+    MyLazyBoy(v) = complete_me(new(), v) # delegate
+end
+
+function complete_me(obj::MyLazyBoy, v)
+    obj.data = v
+    obj
+end
+
+# Outer-only constructors
+struct SummedArray{T<:Number,S<:Number}
+    data::Vector{T}
+    sum::S
+    function SummedArray(a::Vector{T}) where {T}
+        S = widen(T)
+        new{T,S}(a, sum(S, a))
+    end
 end
