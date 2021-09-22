@@ -54,3 +54,5 @@
   - Assigning to a variable with a declared type (e.g. `local x::T`) converts to that type.
   - A function with a declared return type converts its return value to that type.
   - Passing a value to `ccall` converts it to the corresponding argument type.
+- Modules:
+  - Due to syntactic ambiguities, qualifying a name that contains only symbols, such as an operator, requires inserting a colon, e.g. `Base.:+`. A small number of operators additionally require parentheses, e.g. `Base.:(==)`

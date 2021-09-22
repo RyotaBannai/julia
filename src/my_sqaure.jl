@@ -1,5 +1,3 @@
-using PartialFunctions
-
 struct Squares
     count::Int
 end

@@ -1,5 +1,3 @@
-using PartialFunctions
-
 struct MyRational{T<:Integer} <: Real
     num::T
     den::T
