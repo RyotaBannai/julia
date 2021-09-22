@@ -1,4 +1,5 @@
 ### NOTES
+- [Activating project environment in Julia REPL automatically](https://bkamins.github.io/julialang/2020/05/10/julia-project-environments.html)
 - Conventions:
  - Functions that write to their arguments have names that end in `!`. These are sometimes called "`mutating`" or "`in-place`" functions because they are intended to produce changes in their arguments after the function is called, not just return a value.
 - Syntax Conflicts: `Juxtaposed literal coefficient syntax` may conflict with some numeric literal syntaxes:
