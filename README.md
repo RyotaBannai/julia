@@ -1,5 +1,19 @@
 ### NOTES
 - [Activating project environment in Julia REPL automatically](https://bkamins.github.io/julialang/2020/05/10/julia-project-environments.html)
+- Check function type:
+  - `@code_warntype f(2)`: shows input type and types of calculated values including return value, even if you don't annotate type.
+  - `Base.return_types(f)`: shows return types for each methods if you annotate them, otherwise it shows `Any` type
+- `Macro`:
+  - macros work with expressions `at parse time` and cannot access the types of their inputs
+  - returns `expressions`, which is compiled directly rather than requiring a runtime `eval` call.(unlike `Eval` objects)
+  - [macro's local variables and variables in `expression` would not conflict each other as long as the variable is either the macro's argument name, or declared with as `local`.](https://docs.julialang.org/en/v1/manual/metaprogramming/#Hygiene)
+  - [`macro dispatch` is based on the types of AST that are handed to the macro, not the types that `the AST evaluates to at runtime`](https://docs.julialang.org/en/v1/manual/metaprogramming/#Macros-and-dispatch)
+   - つまり macro を呼び出す時に与えられたオブジェクトを元に適切な method を呼び出すため、変数など runtime に評価されるオブジェクトを渡すと、評価される前の状態で method を呼び出すことになる(評価後の型を元に dispatch が行われない).
+- `Generated functions`:
+  - While macros work with expressions at parse time and cannot access the types of their inputs,`a generated function` gets expanded at a time when the `types of the arguments are known`, but the function is not yet compiled.
+  - generated functions shouldn't:
+    - contains side effects(because they might be cached, thus cashing of native pointers also must be avoided.)
+    - interact/observe global mutable state(because definition ordered becomes matter, const global state is ok)
 - Conventions:
  - Functions that write to their arguments have names that end in `!`. These are sometimes called "`mutating`" or "`in-place`" functions because they are intended to produce changes in their arguments after the function is called, not just return a value.
 - Syntax Conflicts: `Juxtaposed literal coefficient syntax` may conflict with some numeric literal syntaxes:
@@ -55,4 +69,4 @@
   - A function with a declared return type converts its return value to that type.
   - Passing a value to `ccall` converts it to the corresponding argument type.
 - Modules:
-  - Due to syntactic ambiguities, qualifying a name that contains only symbols, such as an operator, requires inserting a colon, e.g. `Base.:+`. A small number of operators additionally require parentheses, e.g. `Base.:(==)`
+  - Due to syntactic ambiguities, qualifying a name that contains only symbols, such as an operator, requires inserting a colon, e.g. `Base.:+`. A small number of operators additionally require parentheses, e.g. Base.:(==)`
