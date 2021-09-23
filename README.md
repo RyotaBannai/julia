@@ -3,6 +3,7 @@
 - Check function type:
   - `@code_warntype f(2)`: shows input type and types of calculated values including return value, even if you don't annotate type.
   - `Base.return_types(f)`: shows return types for each methods if you annotate them, otherwise it shows `Any` type
+  - `@which UnitRange{Int}(3,5)`: `@which` macro show where it defined
 - `Macro`:
   - macros work with expressions `at parse time` and cannot access the types of their inputs
   - returns `expressions`, which is compiled directly rather than requiring a runtime `eval` call.(unlike `Eval` objects)
@@ -12,7 +13,7 @@
 - `Generated functions`:
   - While macros work with expressions at parse time and cannot access the types of their inputs,`a generated function` gets expanded at a time when the `types of the arguments are known`, but the function is not yet compiled.
   - generated functions shouldn't:
-    - contains side effects(because they might be cached, thus cashing of native pointers also must be avoided.)
+    - contains side effects(because they might be cached, thus cashing of native pointers also must be avoided)
     - interact/observe global mutable state(because definition ordered becomes matter, const global state is ok)
 - Conventions:
  - Functions that write to their arguments have names that end in `!`. These are sometimes called "`mutating`" or "`in-place`" functions because they are intended to produce changes in their arguments after the function is called, not just return a value.
