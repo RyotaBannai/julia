@@ -101,3 +101,12 @@ struct SummedArray{T<:Number,S<:Number}
         new{T,S}(a, sum(S, a))
     end
 end
+
+for line in eachline(open("./inputs.txt"))
+    isempty(line) && break
+    println(line)
+end
+
+open("./inputs.txt") do f
+    foreach(println, eachline(f))
+end

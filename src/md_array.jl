@@ -24,5 +24,5 @@ take_diag =
       1:size(page)[1],
       init = eltype(A)[],
    )
-   
+
 take_diag2 = A[CartesianIndex.(axes(A, 1), axes(A, 2)), 1]

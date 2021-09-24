@@ -15,7 +15,10 @@
   - generated functions shouldn't:
     - contains side effects(because they might be cached, thus cashing of native pointers also must be avoided)
     - interact/observe global mutable state(because definition ordered becomes matter, const global state is ok)
-- Conventions:
+- `Tasks` (also known by several other names, such as `symmetric coroutines`, `lightweight threads`, `cooperative multitasking`, or `one-shot continuations`).
+ - switching tasks does not use any space, so any number of task switches can occur without consuming the call stack.
+ - switching among tasks can occur in any order, unlike function calls, where the called function must finish executing before control returns to the calling function.
+- `Conventions`:
  - Functions that write to their arguments have names that end in `!`. These are sometimes called "`mutating`" or "`in-place`" functions because they are intended to produce changes in their arguments after the function is called, not just return a value.
 - Syntax Conflicts: `Juxtaposed literal coefficient syntax` may conflict with some numeric literal syntaxes:
  - In all cases the ambiguity is resolved in favor of interpretation as numeric literals:
